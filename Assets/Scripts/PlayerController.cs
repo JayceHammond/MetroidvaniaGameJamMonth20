@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     public float speed;
     public float jumpSpeed;
-        private void Start() {
-        
+    public bool groundState;
+    private void Start() {
+
     }
 
     private void FixedUpdate() {
@@ -16,15 +16,27 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Update() {
-        if(Input.GetKey(KeyCode.RightArrow)){
-            this.transform.Translate(speed * Time.deltaTime, 0, 0);
+        RaycastHit hit;
+
+
+        if(Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 1.25f, LayerMask.GetMask("Ground"))){
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down), Color.green);
+            groundState = true;
         }
-        else if(Input.GetKey(KeyCode.LeftArrow)){
-            this.transform.Translate(-speed * Time.deltaTime, 0, 0);
+        else{
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down), Color.red);
+            groundState = false;
         }
 
-        if(Input.GetKeyDown(KeyCode.UpArrow)){
-            this.transform.Translate(0 ,jumpSpeed * Time.deltaTime, 0);
+        if(Input.GetKey(KeyCode.RightArrow)){
+            transform.Translate(speed * Time.deltaTime, 0, 0);
+        }
+        else if(Input.GetKey(KeyCode.LeftArrow)){
+            transform.Translate(-speed * Time.deltaTime, 0, 0);
+        }
+
+        if(Input.GetKeyDown(KeyCode.UpArrow) && groundState == true){
+            transform.Translate(0, Mathf.Pow(10, jumpSpeed) * Time.deltaTime, 0);
         }
         
     }
