@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public Image highHealth;
     public Image medHealth;
     public Image lowHealth;
+    private bool faceBackward = false;
 
     private void Start() {
         health = maxHealth;
@@ -60,9 +61,17 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKey(KeyCode.RightArrow)){
+            if(faceBackward == true){
+                this.GetComponent<SpriteRenderer>().flipX = false;
+                faceBackward = false;
+            }
             transform.Translate(speed * Time.deltaTime, 0, 0);
         }
         else if(Input.GetKey(KeyCode.LeftArrow)){
+            if(faceBackward == false){
+                this.GetComponent<SpriteRenderer>().flipX = true;
+                faceBackward = true;
+            }
             transform.Translate(-speed * Time.deltaTime, 0, 0);
         }
     }
