@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -42,17 +43,8 @@ public class PlayerController : MonoBehaviour
             //transform.Translate(0, Mathf.Pow(10, jumpSpeed) * Time.deltaTime, 0);
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
         }
-
-        if(health == 2){
-            Image[] arr = healthCanvas.transform.GetComponentsInChildren<Image>();
-            foreach(Image img in arr){
-                img.sprite = medHealth.sprite;
-            }
-        }else if(health == 1){
-            Image[] arr = healthCanvas.transform.GetComponentsInChildren<Image>();
-            foreach(Image img in arr){
-                img.sprite = lowHealth.sprite;
-            }
+        if(health == 0){
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex,LoadSceneMode.Single);
         }
         
     }
@@ -75,11 +67,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D col) {
-        if(col.gameObject.tag == "Enemy"){
+    public void TakeDamage(){
             Debug.Log("Destroy");
             Destroy(healthCanvas.transform.GetChild(health - 1).gameObject);
             health -= 1;
+    }
+
+    void OnCollisionEnter2D(Collision2D col) {
+        if(col.gameObject.tag == "Enemy"){
+            TakeDamage();
+        }
+        if(col.gameObject.tag == "Bounds"){
+            TakeDamage();
+            transform.position = new Vector2(0, 0);
+        }
+        Image[] arr = healthCanvas.transform.GetComponentsInChildren<Image>();
+        if(health == 2){
+            foreach(Image img in arr){
+                img.sprite = medHealth.sprite;
+            }
+        }else if(health == 1){
+            foreach(Image img in arr){
+                img.sprite = lowHealth.sprite;
+            }
         }
     }
 }
