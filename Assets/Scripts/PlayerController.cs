@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float jumpSpeed;
     public bool groundState;
     public Rigidbody2D rb;
+    public Animator animator;
     public float fCutJumpHeight;
     public ArrayList healthBar = new ArrayList();
     public int maxHealth;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKey(KeyCode.RightArrow)){
+            animator.SetBool("Moving", true);
             if(faceBackward == true){
                 this.GetComponent<SpriteRenderer>().flipX = false;
                 faceBackward = false;
@@ -68,11 +70,15 @@ public class PlayerController : MonoBehaviour
             transform.Translate(speed * Time.deltaTime, 0, 0);
         }
         else if(Input.GetKey(KeyCode.LeftArrow)){
+            animator.SetBool("Moving", true);
             if(faceBackward == false){
                 this.GetComponent<SpriteRenderer>().flipX = true;
                 faceBackward = true;
             }
             transform.Translate(-speed * Time.deltaTime, 0, 0);
+        }
+        else{
+            animator.SetBool("Moving", false);
         }
     }
 
