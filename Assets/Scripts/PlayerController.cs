@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -19,7 +20,9 @@ public class PlayerController : MonoBehaviour
     public Image highHealth;
     public Image medHealth;
     public Image lowHealth;
+    public float moveDampening;
     private bool faceBackward = false;
+    private float e = Mathf.Exp(1);
 
     private void Start() {
         health = maxHealth;
@@ -52,6 +55,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void Move(){
+        float startTime = 0;
         if(Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 1.25f, LayerMask.GetMask("Ground"))){
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down), Color.green);
             groundState = true;
@@ -62,24 +66,36 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetKey(KeyCode.RightArrow)){
+            startTime = Time.time;
             animator.SetBool("Moving", true);
             if(faceBackward == true){
                 this.GetComponent<SpriteRenderer>().flipX = false;
                 faceBackward = false;
             }
-            transform.Translate(speed * Time.deltaTime, 0, 0);
+            //transform.Translate((speed * (1 - Mathf.Pow(e, -moveDampening * Time.time)), 0, 0));
         }
         else if(Input.GetKey(KeyCode.LeftArrow)){
+            
+            startTime = Time.time;
             animator.SetBool("Moving", true);
             if(faceBackward == false){
                 this.GetComponent<SpriteRenderer>().flipX = true;
                 faceBackward = true;
             }
-            transform.Translate(-speed * Time.deltaTime, 0, 0);
         }
         else{
             animator.SetBool("Moving", false);
         }
+        
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        Vector2 forceInput;
+        horizontalInput *= speed * (1 - Mathf.Pow(e, -moveDampening * Time.time - startTime));
+        forceInput = new Vector2(horizontalInput, 0);
+        rb.AddForce(forceInput, ForceMode2D.Force);
+        Debug.Log(rb.velocity);
+        
+        
+
     }
 
     public void TakeDamage(){
