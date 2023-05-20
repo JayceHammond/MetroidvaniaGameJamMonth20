@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  jumpSpeed: 8
+  jumpSpeed: 15
   groundState: 0
   rb: {fileID: 1003043395}
   animator: {fileID: 1003043402}
@@ -1416,7 +1416,7 @@ MonoBehaviour:
   highHealth: {fileID: 4147256614420550931, guid: c96275de3ba1fc1459880562c2bef3ea, type: 3}
   medHealth: {fileID: 9053084065562810975, guid: d7023d2288d38f94bb3115d85c1b17f3, type: 3}
   lowHealth: {fileID: 5217589734791439372, guid: 41baeada312eac0458d23d7a72ec87bb, type: 3}
-  moveDampening: 0.1
+  moveDampening: 0.5
 --- !u!61 &1003043401
 BoxCollider2D:
   m_ObjectHideFlags: 0

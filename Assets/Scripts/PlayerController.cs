@@ -90,8 +90,9 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         Vector2 forceInput;
         horizontalInput *= speed * (1 - Mathf.Pow(e, -moveDampening * Time.time - startTime));
-        forceInput = new Vector2(horizontalInput, 0);
+        forceInput = new Vector2(Mathf.Clamp(horizontalInput, -speed, speed) , 0);
         rb.AddForce(forceInput, ForceMode2D.Force);
+        rb.velocity = Vector2.ClampMagnitude(rb.velocity, speed);
         Debug.Log(rb.velocity);
         
         
