@@ -92,11 +92,7 @@ public class PlayerController : MonoBehaviour
         horizontalInput *= speed * (1 - Mathf.Pow(e, -moveDampening * Time.time - startTime));
         forceInput = new Vector2(Mathf.Clamp(horizontalInput, -speed, speed) , 0);
         rb.AddForce(forceInput, ForceMode2D.Force);
-        rb.velocity = Vector2.ClampMagnitude(rb.velocity, speed);
-        Debug.Log(rb.velocity);
-        
-        
-
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), rb.velocity.y);
     }
 
     public void TakeDamage(){
