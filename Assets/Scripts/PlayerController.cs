@@ -41,6 +41,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate() {
         Move();
+        animator.SetFloat("Speed", rb.velocity.x);
+        Debug.Log(rb.velocity);
     }
 
     private void Update() {
@@ -56,6 +58,14 @@ public class PlayerController : MonoBehaviour
 
     public void Move(){
         float startTime = 0;
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        Vector2 forceInput;
+        horizontalInput *= speed * (1 - Mathf.Pow(e, -moveDampening * Time.time - startTime));
+        forceInput = new Vector2(Mathf.Clamp(horizontalInput, -speed, speed) , 0);
+        rb.AddForce(forceInput, ForceMode2D.Force);
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), rb.velocity.y);
+
         if(Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 1.25f, LayerMask.GetMask("Ground"))){
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down), Color.green);
             groundState = true;
@@ -72,7 +82,6 @@ public class PlayerController : MonoBehaviour
                 this.GetComponent<SpriteRenderer>().flipX = false;
                 faceBackward = false;
             }
-            //transform.Translate((speed * (1 - Mathf.Pow(e, -moveDampening * Time.time)), 0, 0));
         }
         else if(Input.GetKey(KeyCode.LeftArrow)){
             
@@ -87,12 +96,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Moving", false);
         }
         
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        Vector2 forceInput;
-        horizontalInput *= speed * (1 - Mathf.Pow(e, -moveDampening * Time.time - startTime));
-        forceInput = new Vector2(Mathf.Clamp(horizontalInput, -speed, speed) , 0);
-        rb.AddForce(forceInput, ForceMode2D.Force);
-        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), rb.velocity.y);
     }
 
     public void TakeDamage(){
